@@ -8,20 +8,10 @@ USER_ENDPOINT = f"{BASE_URL}/user"
 
 # 1. Functional tests
 # Successful update of an existing user
-def test_update_user_success():
-    username = "testuser_update"
+def test_update_user_success(valid_user_payload):
+    username = valid_user_payload["username"]
     # First, create the user to ensure it exists
-    create_payload = {
-        "id": 20001,
-        "username": username,
-        "firstName": "OldFirst",
-        "lastName": "OldLast",
-        "email": "old@example.com",
-        "password": "oldpass",
-        "phone": "0000000000",
-        "userStatus": 1
-    }
-    requests.post(f"{USER_ENDPOINT}", json=create_payload)
+    requests.post(f"{USER_ENDPOINT}", json=valid_user_payload)
     # Now, update the user
     update_payload = {
         "id": 20002,
@@ -47,48 +37,23 @@ def test_update_user_success():
         assert user_data[key] == update_payload[key], f"Field {key} did not update correctly"
 
 # Update user name
-def test_update_user_name_failed():
-    username = "testuser_update_old"
+def test_update_user_name_failed(valid_user_payload):
+    username = valid_user_payload["username"]
     # create the user to ensure it exists
-    create_payload = {
-        "id": 20001,
-        "username": username,
-        "firstName": "OldFirst",
-        "lastName": "OldLast",
-        "email": "old@example.com",
-        "password": "oldpass",
-        "phone": "0000000000",
-        "userStatus": 1
-    }
-    requests.post(f"{USER_ENDPOINT}", json=create_payload)
+    requests.post(f"{USER_ENDPOINT}", json=valid_user_payload)
     # update the user name
-    update_payload = {
-        "id": 20001,
-        "username": "testuser_update_new",
-        "firstName": "OldFirst",
-        "lastName": "OldLast",
-        "email": "old@example.com",
-        "password": "oldpass",
-        "phone": "0000000000",
-        "userStatus": 1
-    }
+    update_payload = valid_user_payload.copy()
+    update_payload["username"] = "testuser_update_new"
     response = requests.put(f"{USER_ENDPOINT}/{username}", json=update_payload)
     assert response.status_code == 400
 
 
 # 2. Update with missing required fields
-def test_update_user_missing_username():
-    username = "testuser_update_missing"
-    update_payload = {
-        "id": 20002,
-        # "username" is missing
-        "firstName": "NewFirst",
-        "lastName": "NewLast",
-        "email": "new@example.com",
-        "password": "newpass",
-        "phone": "1111111111",
-        "userStatus": 2
-    }
+def test_update_user_missing_username(valid_user_payload):
+    username = valid_user_payload["username"]
+    update_payload = valid_user_payload.copy()
+    update_payload.pop("username")
+
     response = requests.put(f"{USER_ENDPOINT}/{username}", json=update_payload)
     assert response.status_code == 400
 
