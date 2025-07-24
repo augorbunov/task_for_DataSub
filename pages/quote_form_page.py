@@ -10,7 +10,7 @@ class QuoteFormPage:
         self.withdraw_card_radio = page.locator('#withdrawCard')
         self.withdraw_crypto_radio = page.locator('#withdrawCrypto')
         self.message_input = page.locator('#message')
-        self.submit_button = page.locator('button.btn-dark')
+        self.submit_button = page.locator("button.btn-dark", has_text="Request A Quote")
         self.status_div = page.locator('#formStatus')
 
     def goto(self):

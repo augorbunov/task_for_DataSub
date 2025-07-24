@@ -3,4 +3,3 @@ pytest-playwright
 playwright
 allure-pytest
 jsonschema
-json
